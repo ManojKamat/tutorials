@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knouckout JS Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-latest.js"
+        integrity="sha512-2AL/VEauKkZqQU9BHgnv48OhXcJPx9vdzxN1JrKDVc4FPU/MEE/BZ6d9l0mP7VmvLsjtYwqiYQpDskK9dG8KBA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+    Choose a ticket class
+
+    <select
+        data-bind="options: tickets, optionsCaption: 'Choose....', optionsText: 'name', value: chosenTicket"></select>
+
+    <button data-bind="enable: chosenTicket, click: resetTicket">Clear</button>
+
+    <p data-bind="with: chosenTicket">
+        You have chosen <strong data-bind="text: name"></strong>
+        ($<span data-bind="text: price"></span>)
+    </p>
+
+    <script>
+
+        ko.extenders.logChange = function (target, option) {
+            target.subscribe(function (newValue) {
+                console.log(option + ": " + newValue.name);
+            });
+            return target;
+        }
+
+        function TicketViewModel() {
+            this.tickets = [
+                { name: 'Economy', price: 199.95 },
+                { name: 'Business', price: 499.95 },
+                { name: 'First Class', price: 1199.95 }
+            ];
+            this.chosenTicket = ko.observable().extend({ logChange: 'Choosen Ticket' });
+            this.resetTicket = function () {
+                this.chosenTicket(null);
+            }
+        }
+        ko.applyBindings(new TicketViewModel());
+    </script>
+</body>
+
+</html>
